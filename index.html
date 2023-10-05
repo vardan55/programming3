@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="p5.js"></script>
+    <script src="Heroes/Grass.js"></script>
+    <script src="Heroes/GrassEater.js"></script>
+    <script src="Heroes/Predator.js"></script>
+    <script src="Heroes/DangerousPredator.js"></script>
+    <script src="Heroes/Fire.js"></script>
+    <script src="Heroes/thunder.js"></script>
+    <script src="game.js"></script>
+    <title>Game</title>
+</head>
+<body>
+    <h1 style="margin: 0px">Simulation Game</h1>
+    <br>
+    <h3>CHARACTERS:</h3>
+    <h3 class="hint" style="color:lightgrey">Click on texts to view info</h3>
+    <br>
+    <div style="display: flex; justify-content: center">
+        <h3 class="characterDesc" style="color:#8a6e69" onclick="alert('Empty Cell')">Dirt </h3>
+        <h3 class="characterDesc" id="grassT" style="color:#29d958" onclick="alert('Grass Cell')"> Grass</h3>
+        <h3 class="characterDesc" id="grassEaterT" style="color:#d9a429" onclick="alert('Grass Eater, eats grass to survive')"> Grass Eater</h3>
+        <h3 class="characterDesc" id="predatorT" style="color:brown" onclick="alert('Predator, eats Grass eaters to survive')"> Predator</h3>
+        <h3 class="characterDesc" id="dpredatorT" style="color:black" onclick="alert('Dangerous Predator, eats Grass, Grass Eaters and Predators to survive')"> Dangerous Predator</h3>
+        <h3 class="characterDesc" style="color:rgb(135, 135, 135)" onclick="alert('Thunder, burns neighboring grass cells')"> Thunder</h3>
+        <h3 class="characterDesc" id="fireT" style="color:red" onclick="alert('Fire, burns grass and spreads')"> Fire</h3>
+    </div>
+    <br>
+    
+    <h3 class="hint" style="color:lightgrey"> Click on cells to create thunderstorms!</h3>
+    <br>
+</body>
+
+</html>
+<style>
+    *
+    {
+        margin: 0px;
+        padding:0px;
+        text-align: center;
+    }
+    .characterDesc{
+        margin-right: 30px; 
+        cursor: pointer;
+    }
+    .characterDesc:hover{
+        text-decoration: underline;
+        
+    }
+    .hint
+    {
+        font-style: italic;
+    }
+   
+</style>
