@@ -25,7 +25,7 @@ function setup()
 {
     spreadCharacter(1,5000);
     spreadCharacter(2,1000);
-   spreadCharacter(3,1000);
+    spreadCharacter(3,1000);
     spreadCharacter(4,5);
    
     //frameRate(1);
