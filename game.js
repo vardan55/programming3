@@ -9,6 +9,7 @@ var predator_array = []
 var dpredator_array = []
 var fire_array = []
 var thunder_array = []
+
 function spreadCharacter(index, count) {
     for (let a = 0; a < count; a++) {
 
@@ -18,8 +19,6 @@ function spreadCharacter(index, count) {
         matrix[x][y] = index
     }
     }
-
-
 
 function setup()
 {
@@ -218,4 +217,4 @@ function getCellCoordinates() {
     const cellX = Math.floor(mouseX / cellSize);
     const cellY = Math.floor(mouseY / cellSize);
     return { x: cellX, y: cellY };
-  }
+}
