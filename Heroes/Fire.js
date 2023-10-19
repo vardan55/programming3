@@ -1,4 +1,6 @@
-class Fire extends Cell{
+const Cell = require("./cell")
+var random = require("../rand")
+module.exports = class Fire extends Cell{
     constructor(x, y, index) {
         super()
         this.x = x;

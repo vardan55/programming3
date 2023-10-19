@@ -1,4 +1,6 @@
-class Cell
+var random = require("../rand")
+
+module.exports = class Cell
 {
     constructor(x,y,index)
     {

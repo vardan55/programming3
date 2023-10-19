@@ -1,4 +1,6 @@
-class Thunder extends Cell {
+const Cell = require("./cell")
+var random = require("../rand")
+module.exports = class Thunder extends Cell {
     constructor(x, y, index) {
         super()
         this.x = x;

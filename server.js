@@ -1,12 +1,173 @@
-var express = require("express");
+var express = require('express');
 var app = express();
-
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 app.use(express.static("."));
-
 app.get("/", function(req, res){
-   res.redirect("index.html");
+   res.redirect("./index.html");
 });
 
 app.listen(3000, function(){
    console.log("Example is running on port 3000");
 });
+
+var widthh =80;
+var heightt = 80;
+var cellSize = 10;
+
+var random = require("./rand")
+
+matrix = createMatrix(widthh,heightt)
+grass_array = []
+grasseater_array = []
+predator_array = []
+dpredator_array = []
+fire_array = []
+thunder_array = []
+
+//Cells
+const DangerousPredator = require("./Heroes/DangerousPredator")
+const Fire = require("./Heroes/Fire")
+const Grass = require("./Heroes/Grass")
+const GrassEater = require("./Heroes/GrassEater")
+const Predator = require("./Heroes/Predator")
+const Thunder = require("./Heroes/Thunder")
+
+function spreadCharacter(index, count) {
+    for (let a = 0; a < count; a++) {
+
+    var x = Math.floor(random(0, heightt))
+    var y = Math.floor(random(0, widthh))
+    if(matrix[x][y]==0)
+        matrix[x][y] = index
+    }
+}
+
+function createMatrix(w,h)
+{
+    var final = [];
+    for(var i=0;i<h;i++)
+    {
+        var row = [];
+        for(var v=0;v<w;v++)
+        {
+           row.push(0);
+           
+        }
+        final.push(row);
+    }
+    return final;
+}
+
+function simulate()
+{
+   for(let gr=0;gr<grass_array.length;gr++)
+   {
+
+      if(grass_array[gr])
+       grass_array[gr].groww();
+   }
+   for(let grasseater=0;grasseater<grasseater_array.length;grasseater++)
+   {
+       grasseater_array[grasseater].eat();
+   }
+   for(let predator=0;predator<predator_array.length;predator++)
+   {
+       predator_array[predator].eat();
+   }
+   for(let dpredator=0;dpredator<dpredator_array.length;dpredator++)
+   {
+       dpredator_array[dpredator].eat();
+   }
+   for(let thunder=0;thunder<thunder_array.length;thunder++)
+   {
+       thunder_array[thunder].hit();
+   }
+   for(let fire=0;fire<fire_array.length;fire++)
+   {
+       fire_array[fire].groww();
+   }
+   socket.emit("sync", {grass:grass_array,
+      grasseater:grasseater_array,
+      predator:predator_array,
+      dpredator:dpredator_array,
+      fire:fire_array,
+      thunder:thunder_array,
+      matrix:matrix
+      });
+}
+
+
+
+function initialize()
+{
+   spreadCharacter(1,5000);
+spreadCharacter(2,1000);
+spreadCharacter(3,1000);
+spreadCharacter(4,5);
+for(var h =0;h<matrix.length;h++)
+    {
+        for(var w =0;w<matrix[h].length;w++)
+        {
+            if(matrix[h][w] == 1)
+            {
+                grass_array.push(new Grass(w,h,1));
+            }
+            if(matrix[h][w] == 2)
+            {
+                grasseater_array.push(new GrassEater(w,h,2));
+            }
+            if(matrix[h][w] == 3)
+            {
+                predator_array.push(new Predator(w,h,3));
+            }
+            if(matrix[h][w] == 4)
+            {
+                dpredator_array.push(new DangerousPredator(w,h,4));
+            }
+            if(matrix[h][w] == 5)
+            {
+                fire_array.push(new Fire(w,h,5));
+            }
+            if(matrix[h][w] == 6)
+            {
+                thunder_array.push(new Thunder(w,h,6));
+            }
+        }
+    }
+    socket.emit("sync", {grass:grass_array,
+      grasseater:grasseater_array,
+      predator:predator_array,
+      dpredator:dpredator_array,
+      fire:fire_array,
+      thunder:thunder_array,
+      matrix:matrix
+      });
+}
+
+io.on('connection', function (socket) {
+   initialize();
+   startGame();
+   socket.emit("matrix", matrix)
+   socket.emit("sync", {grass:grass_array,
+   grasseater:grasseater_array,
+   predator:predator_array,
+   dpredator:dpredator_array,
+   fire:fire_array,
+   thunder:thunder_array,
+   matrix:matrix
+   });
+});
+
+let intervalID;
+
+function startGame()
+{
+   clearInterval(intervalID)
+   setInterval(()=>{
+      simulate()
+   } ,1000)
+}
+
+
+

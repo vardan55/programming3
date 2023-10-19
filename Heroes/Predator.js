@@ -1,4 +1,6 @@
-class Predator extends Cell {
+const Cell = require("./cell")
+var random = require("../rand")
+module.exports = class Predator extends Cell {
     constructor(x, y, index) {
         super()
         this.x = x;
