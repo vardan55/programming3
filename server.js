@@ -2,14 +2,14 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+
 app.use(express.static("."));
+
 app.get("/", function(req, res){
    res.redirect("./index.html");
 });
 
-app.listen(3000, function(){
-   console.log("Example is running on port 3000");
-});
+
 
 var widthh =80;
 var heightt = 80;
@@ -34,10 +34,12 @@ const Predator = require("./Heroes/Predator")
 const Thunder = require("./Heroes/Thunder")
 
 function spreadCharacter(index, count) {
+   
     for (let a = 0; a < count; a++) {
 
-    var x = Math.floor(random(0, heightt))
-    var y = Math.floor(random(0, widthh))
+    var x = Math.floor(random(heightt))
+    var y = Math.floor(random(widthh))
+
     if(matrix[x][y]==0)
         matrix[x][y] = index
     }
@@ -87,14 +89,14 @@ function simulate()
    {
        fire_array[fire].groww();
    }
-   socket.emit("sync", {grass:grass_array,
-      grasseater:grasseater_array,
-      predator:predator_array,
-      dpredator:dpredator_array,
-      fire:fire_array,
-      thunder:thunder_array,
-      matrix:matrix
-      });
+   io.sockets.emit("sync", {
+    matrix:matrix,
+    grasseater:grasseater_array.length,
+    predator:predator_array.length,
+    dpredator:dpredator_array.length,
+    fire:fire_array.length,
+    thunder:thunder_array.length,
+    });
 }
 
 
@@ -135,39 +137,43 @@ for(var h =0;h<matrix.length;h++)
             }
         }
     }
-    socket.emit("sync", {grass:grass_array,
-      grasseater:grasseater_array,
-      predator:predator_array,
-      dpredator:dpredator_array,
-      fire:fire_array,
-      thunder:thunder_array,
-      matrix:matrix
+    io.sockets.emit("sync", {
+      matrix:matrix,
+      grasseater:grasseater_array.length,
+      predator:predator_array.length,
+      dpredator:dpredator_array.length,
+      fire:fire_array.length,
+      thunder:thunder_array.length,
       });
 }
 
 io.on('connection', function (socket) {
    initialize();
    startGame();
-   socket.emit("matrix", matrix)
-   socket.emit("sync", {grass:grass_array,
-   grasseater:grasseater_array,
-   predator:predator_array,
-   dpredator:dpredator_array,
-   fire:fire_array,
-   thunder:thunder_array,
+   socket.emit("sync", {
    matrix:matrix
    });
+   socket.on("thunder",function(cellCoordinates)
+   {
+    matrix[cellCoordinates.y][cellCoordinates.x] = 6;
+    thunder_array.push(new Thunder(cellCoordinates.x,cellCoordinates.y,6));
+   })
 });
+
+
 
 let intervalID;
 
 function startGame()
 {
    clearInterval(intervalID)
-   setInterval(()=>{
+   intervalID = setInterval(()=>{
       simulate()
-   } ,1000)
+   } ,100)
 }
 
-
-
+let PORT = 3000
+server.listen(PORT, function(){
+    console.log("Server is running on port "+PORT);
+    console.log("Open: localhost:"+PORT)
+ });

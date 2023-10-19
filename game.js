@@ -7,12 +7,9 @@ const socket = io()
 
 
 var matrix = []
-var grass_array = []
-var grasseater_array = []
-var predator_array = []
-var dpredator_array = []
-var fire_array = []
-var thunder_array = []
+
+var grass_array,grasseater_array,predator_array,fire_array,dpredator_array;
+
 socket.on("sync",function(data)
 {
     console.log("sync")
@@ -20,9 +17,8 @@ socket.on("sync",function(data)
     grass_array = data.grass;
     grasseater_array = data.grasseater;
     predator_array = data.predator;
-    dpredator_array = data.dpredator;
     fire_array = data.fire;
-    thunder_array = data.thunder;
+    dpredator_array = data.dpredator;
     drawe()
 })
 
@@ -39,7 +35,7 @@ function setup()
 
 //socket.on("matrix", drawe)
 
-function drawe(matrix)
+function drawe()
 {
    // console.log("e");
     for(var h =0;h<matrix.length;h++)
@@ -81,60 +77,60 @@ function drawe(matrix)
 
 
 
-   if(grass_array.length<=0)
+   if(grass_array<=0||grass_array == undefined)
    {
     document.getElementById("grassT").innerHTML = "Grass";
    }
    else
    {
-    document.getElementById("grassT").innerHTML = "Grass("+grass_array.length+")";
+    document.getElementById("grassT").innerHTML = "Grass("+grass_array+")";
    }
 
-   if(grasseater_array.length<=0)
+   if(grasseater_array<=0||grasseater_array == undefined)
    {
     document.getElementById("grassEaterT").innerHTML = "Grass Eater";
    }
    else
    {
-    document.getElementById("grassEaterT").innerHTML = "Grass Eater("+grasseater_array.length+")";
+    document.getElementById("grassEaterT").innerHTML = "Grass Eater("+grasseater_array+")";
    }
    
 
-   if(predator_array.length<=0)
+   if(predator_array<=0||predator_array == undefined)
    {
     document.getElementById("predatorT").innerHTML = "Predator";
    }
    else
    {
-    document.getElementById("predatorT").innerHTML = "Predator("+predator_array.length+")";
+    document.getElementById("predatorT").innerHTML = "Predator("+predator_array+")";
    }
 
-   if(dpredator_array.length<=0)
+   if(dpredator_array<=0||dpredator_array==undefined)
    {
     document.getElementById("dpredatorT").innerHTML = "Dangerous Predator";
    }
    else
    {
-    document.getElementById("dpredatorT").innerHTML = "Dangerous Predator("+dpredator_array.length+")";
+    document.getElementById("dpredatorT").innerHTML = "Dangerous Predator("+dpredator_array+")";
    }
   
   
   
 
 
-   if(fire_array.length<=0)
+   if(fire_array<=0 || fire_array == undefined)
    {
     document.getElementById("fireT").innerHTML = "Fire";
    }
-   else if(fire_array.length>=300)
+   else if(fire_array>=300)
    {
-    document.getElementById("fireT").innerHTML = "Fire("+fire_array.length+") Wildfire!";
+    document.getElementById("fireT").innerHTML = "Fire("+fire_array+") Wildfire!";
    }
    else
    {
-    document.getElementById("fireT").innerHTML = "Fire("+fire_array.length+")";
+    document.getElementById("fireT").innerHTML = "Fire("+fire_array+")";
    }
-  
+
 
 }
 
@@ -142,11 +138,10 @@ function drawe(matrix)
 
 function mouseClicked()
 {
+
     var cellCoordinates = getCellCoordinates();
-   
-    matrix[cellCoordinates.y][cellCoordinates.x] = 6;
-    thunder_array.push(new Thunder(cellCoordinates.x,cellCoordinates.y,6));
-    
+    socket.emit("thunder",cellCoordinates)
+
 }
 
 function getCellCoordinates() {
