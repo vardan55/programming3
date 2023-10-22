@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-
+var fs = require("fs")
 app.use(express.static("."));
 
 app.get("/", function(req, res){
@@ -14,6 +14,9 @@ app.get("/", function(req, res){
 var widthh =80;
 var heightt = 80;
 var cellSize = 10;
+
+var season = "summer"
+
 
 var random = require("./rand")
 
@@ -89,14 +92,29 @@ function simulate()
    {
        fire_array[fire].groww();
    }
-   io.sockets.emit("sync", {
-    matrix:matrix,
-    grasseater:grasseater_array.length,
-    predator:predator_array.length,
-    dpredator:dpredator_array.length,
-    fire:fire_array.length,
-    thunder:thunder_array.length,
-    });
+   emit()
+
+    var final = []
+    try
+    {
+        final = JSON.parse(fs.readFileSync("statistics.json"))
+    }catch
+    {
+        final = []
+    }
+    if (!Array.isArray(final))
+    {
+        final = []
+    }
+    final.push({
+        grass:grass_array.length,
+        grasseater:grasseater_array.length,
+        predator:predator_array.length,
+        dpredator:dpredator_array.length,
+        fire:fire_array.length,
+        thunder:thunder_array.length,
+    })
+    fs.writeFileSync("statistics.json",JSON.stringify(final))
 }
 
 
@@ -137,29 +155,38 @@ for(var h =0;h<matrix.length;h++)
             }
         }
     }
-    io.sockets.emit("sync", {
-      matrix:matrix,
-      grasseater:grasseater_array.length,
-      predator:predator_array.length,
-      dpredator:dpredator_array.length,
-      fire:fire_array.length,
-      thunder:thunder_array.length,
-      });
+    emit()
 }
 
 io.on('connection', function (socket) {
    initialize();
    startGame();
-   socket.emit("sync", {
-   matrix:matrix
-   });
+   emit()
    socket.on("thunder",function(cellCoordinates)
    {
     matrix[cellCoordinates.y][cellCoordinates.x] = 6;
     thunder_array.push(new Thunder(cellCoordinates.x,cellCoordinates.y,6));
    })
+   socket.on("season",function(_season)
+   {
+    season = _season
+   })
 });
 
+function emit()
+{
+    io.sockets.emit("sync", {
+        matrix:matrix,
+        grass:grass_array.length,
+        grasseater:grasseater_array.length,
+        predator:predator_array.length,
+        dpredator:dpredator_array.length,
+        fire:fire_array.length,
+        thunder:thunder_array.length,
+        stats:JSON.parse(fs.readFileSync("statistics.json")),
+        season:season,
+      });
+}
 
 
 let intervalID;
