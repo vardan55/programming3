@@ -8,6 +8,10 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 var matrix = []
 
+
+var showStats = false
+
+
 var grass_array,grasseater_array,predator_array,fire_array,dpredator_array,stats,season;
 
 socket.on("sync",function(data)
@@ -23,6 +27,14 @@ socket.on("sync",function(data)
     season = data.season;
     drawe()
 })
+
+
+function switchStats()
+{
+    showStats = !showStats;
+    document.getElementById("statbut").innerHTML = showStats?"Hide Stats":"Show Stats";
+}
+
 
 function changeSeason()
 {
@@ -167,68 +179,96 @@ function drawe()
    {
     document.getElementById("fireT").innerHTML = "Fire("+fire_array+")";
    }
-   fill("white")
-   rect(5,3,140,112)
-   fill("black")
-   
-   line(10,10,10,100)
-   line(10,100,100,100)
-
-   if(!stats)
-    return;
-
-   stroke("red")
-   textSize(10)
-   var v = 0;
-   if (stats.length>=10)
+   if(showStats)
    {
-       v=stats.length-10;
-   }
-   for(var e = v;e<stats.length-1;e++)
-   {
+    fill("white")
+    rect(5,3,140,112)
+    fill("black")
+    
+    line(10,10,10,100)
+    line(10,100,100,100)
+    line(100,100,100,105)
+    line(10,55,15,55)
+    noStroke()
+    text("500",20,57)
+    text(stats.length,100,110)
+    if(!stats)
+     return;
+ 
+    stroke("red")
+    textSize(10)
+    var v = 0;
+    if (stats.length>=10)
+    {
+        v=stats.length-10;
+    }
+    for(var e = v;e<stats.length-1;e++)
+    {
+        
        
-       stroke("orange")
-       line(10+((e-v)*10),clamp(100-stats[e].grasseater/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].grasseater/10,10,110))
-       
-       stroke("red")
-       line(10+((e-v)*10),clamp(100-stats[e].fire/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].fire/10,10,110))
-       stroke("black")
-       line(10+((e-v)*10),clamp(100-stats[e].dpredator/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].dpredator/10,10,110))
-       stroke("brown")
-       line(10+((e-v)*10),clamp(100-stats[e].predator/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].predator/10,10,110))
-       stroke("green")
-       line(10+((e-v)*10),clamp(100-stats[e].grass/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].grass/10,10,110))
-       noStroke()
-       if(e==stats.length-2)
-       {
-      
-        if(stats[e].grasseater >0)
+        if(stats[e].grasseater>0)
         {
-            fill("orange")
-            text(stats[e].grasseater,100,clamp(100-stats[e].grasseater/10,10,110))
+         stroke("orange")
+         line(10+((e-v)*10),clamp(100-stats[e].grasseater/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].grasseater/10,10,110))
         }
+       
         if(stats[e].fire >0)
         {
-            fill("red")
-            text(stats[e].fire,100,clamp(100-stats[e].fire/10,10,110))
+         stroke("red")
+         line(10+((e-v)*10),clamp(100-stats[e].fire/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].fire/10,10,110))
         }
-        if(stats[e].dpredator >0)
+       
+        if(stats[e].dpredator>0)
         {
-            fill("black")
-        text(stats[e].dpredator,100,clamp(100-stats[e].dpredator/10,10,110))
+         stroke("black")
+         line(10+((e-v)*10),clamp(100-stats[e].dpredator/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].dpredator/10,10,110))
         }
-        if(stats[e].predator >0)
+        if(stats[e].predator>0)
         {
-            fill("brown")
-        text(stats[e].predator,100,clamp(100-stats[e].predator/10,10,110))
+         stroke("brown")
+         line(10+((e-v)*10),clamp(100-stats[e].predator/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].predator/10,10,110))
         }
-        if(stats[e].grass >0)
+        if(stats[e].grass>0)
         {
-            fill("green")
-        text(stats[e].grass,100,clamp(100-stats[e].grass/10,10,110))
+         stroke("green")
+         line(10+((e-v)*10),clamp(100-stats[e].grass/10,10,110),10+(((e-v)+1)*10),clamp(100-stats[e+1].grass/10,10,110))
         }
-       }
+        
+      
+       
+        noStroke()
+        if(e==stats.length-2)
+        {
+       
+         if(stats[e].grasseater >0)
+         {
+             fill("orange")
+             text(stats[e].grasseater,100,clamp(100-stats[e].grasseater/10,10,110))
+         }
+         if(stats[e].fire >0)
+         {
+             fill("red")
+             text(stats[e].fire,100,clamp(100-stats[e].fire/10,10,110))
+         }
+         if(stats[e].dpredator >0)
+         {
+             fill("black")
+         text(stats[e].dpredator,100,clamp(100-stats[e].dpredator/10,10,110))
+         }
+         if(stats[e].predator >0)
+         {
+             fill("brown")
+         text(stats[e].predator,100,clamp(100-stats[e].predator/10,10,110))
+         }
+         if(stats[e].grass >0)
+         {
+             fill("green")
+         text(stats[e].grass,100,clamp(100-stats[e].grass/10,10,110))
+         }
+        }
    }
+  
+}
    //line(5,5,150,150)
    stroke("black")
 

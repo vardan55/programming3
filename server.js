@@ -15,7 +15,7 @@ var widthh =80;
 var heightt = 80;
 var cellSize = 10;
 
-var season = "summer"
+var season = "winter"
 
 
 var random = require("./rand")
@@ -118,7 +118,6 @@ function simulate()
 }
 
 
-
 function initialize()
 {
    spreadCharacter(1,5000);
@@ -160,7 +159,7 @@ for(var h =0;h<matrix.length;h++)
 
 io.on('connection', function (socket) {
    initialize();
-   startGame();
+   startGame(100);
    emit()
    socket.on("thunder",function(cellCoordinates)
    {
@@ -170,6 +169,14 @@ io.on('connection', function (socket) {
    socket.on("season",function(_season)
    {
     season = _season
+    if(season == "winter")
+    {
+        interval = 500
+    }
+    else
+    {
+        interval = 100
+    }
    })
 });
 
@@ -191,12 +198,20 @@ function emit()
 
 let intervalID;
 
-function startGame()
+function startGame(interval)
 {
    clearInterval(intervalID)
-   intervalID = setInterval(()=>{
-      simulate()
-   } ,100)
+   var func = function()
+   {
+    clearInterval(intervalID)
+    simulate()
+    intervalID = setInterval(func,interval)
+   };
+   //intervalID = setInterval(()=>{
+   //   simulate()
+  //    
+   //} ,interval)
+   intervalID = setInterval(func,interval)
 }
 
 let PORT = 3000
