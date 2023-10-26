@@ -207,7 +207,7 @@ let intervalID;
 
 function startGame()
 {
-   clearInterval(intervalID)
+   clearTimeout(intervalID)
    var func = function()
    {
     clearInterval(intervalID)
