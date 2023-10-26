@@ -10,7 +10,7 @@ module.exports = class Fire extends Cell{
         this.life = 6;
         this.getNewCoordinates()
     }
-    groww() {
+    groww(season) {
      
         this.growDelay++;
         var emptyCells = this.getNeighboringCells(1);
@@ -30,6 +30,8 @@ module.exports = class Fire extends Cell{
         {
             this.life = 0;
         }
+       
+        if (season=="winter") return;
         if (newCell && this.growDelay >= 3) {
             var newX = newCell[0];
             var newY = newCell[1];

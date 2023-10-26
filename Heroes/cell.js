@@ -49,7 +49,7 @@ module.exports = class Cell
             matrix[this.y][this.x] = 0;
             this.x = cell[0];
             this.y = cell[1];
-            matrix[this.y][this.x] = 3;
+            matrix[this.y][this.x] = this.index;
         }
         this.energy--;
         this.checkDieMul();

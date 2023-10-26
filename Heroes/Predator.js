@@ -9,6 +9,7 @@ module.exports = class Predator extends Cell {
         this.index = index;
         this.getNewCoordinates()
         this.energy =20;
+      
     }
 
    
@@ -44,6 +45,7 @@ module.exports = class Predator extends Cell {
                 if (this.x == predator_array[i].x && this.y == predator_array[i].y) {
                     matrix[this.y][this.x] = 0;
                     predator_array.splice(i, 1);
+                   
                     break;
                 }
             }

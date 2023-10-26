@@ -38,7 +38,7 @@ function switchStats()
 
 function changeSeason()
 {
-    console.log("huh")
+    
     if(season == "summer")
     {
         season = "winter"
@@ -55,7 +55,6 @@ function changeSeason()
 
 
 
-console.log("a")
 function setup()
 {
   
@@ -191,7 +190,7 @@ function drawe()
     line(10,55,15,55)
     noStroke()
     text("500",20,57)
-    text(stats.length,100,110)
+    text("iteration "+stats.length,60,110)
     if(!stats)
      return;
  

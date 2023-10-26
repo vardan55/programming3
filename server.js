@@ -15,7 +15,9 @@ var widthh =80;
 var heightt = 80;
 var cellSize = 10;
 
-var season = "winter"
+var season = "summer"
+
+var interval =100
 
 
 var random = require("./rand")
@@ -90,7 +92,7 @@ function simulate()
    }
    for(let fire=0;fire<fire_array.length;fire++)
    {
-       fire_array[fire].groww();
+       fire_array[fire].groww(season);
    }
    emit()
 
@@ -120,10 +122,11 @@ function simulate()
 
 function initialize()
 {
-   spreadCharacter(1,5000);
-spreadCharacter(2,1000);
-spreadCharacter(3,1000);
-spreadCharacter(4,5);
+   spreadCharacter(1,1000);
+spreadCharacter(2,100);
+spreadCharacter(3,100);
+spreadCharacter(4,4);
+fs.writeFileSync("Statistics.json","[]")
 for(var h =0;h<matrix.length;h++)
     {
         for(var w =0;w<matrix[h].length;w++)
@@ -159,7 +162,7 @@ for(var h =0;h<matrix.length;h++)
 
 io.on('connection', function (socket) {
    initialize();
-   startGame(100);
+   startGame();
    emit()
    socket.on("thunder",function(cellCoordinates)
    {
@@ -171,11 +174,15 @@ io.on('connection', function (socket) {
     season = _season
     if(season == "winter")
     {
+        console.log("setting new interval 500")
         interval = 500
+        console.log("current interval: "+interval)
     }
     else
     {
+        console.log("setting new interval 100")
         interval = 100
+        console.log("current interval: "+interval)
     }
    })
 });
@@ -198,20 +205,18 @@ function emit()
 
 let intervalID;
 
-function startGame(interval)
+function startGame()
 {
    clearInterval(intervalID)
    var func = function()
    {
     clearInterval(intervalID)
     simulate()
-    intervalID = setInterval(func,interval)
+   
+    console.log(interval)
+    setTimeout(func,interval)
    };
-   //intervalID = setInterval(()=>{
-   //   simulate()
-  //    
-   //} ,interval)
-   intervalID = setInterval(func,interval)
+   intervalID = setTimeout(func,interval)
 }
 
 let PORT = 3000
