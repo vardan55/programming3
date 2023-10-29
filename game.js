@@ -290,3 +290,15 @@ function getCellCoordinates() {
     const cellY = Math.floor(mouseY / cellSize);
     return { x: cellX, y: cellY };
 }
+
+
+function deleteCellsDialog()
+{
+    var cell = "noinput";
+   
+    cell = prompt("Which cell to delete? (num input)")
+    if(!cell || cell=="") return;
+
+    socket.emit("erase cell",cell);
+}
+

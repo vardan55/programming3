@@ -184,9 +184,44 @@ io.on('connection', function (socket) {
         interval = 100
         console.log("current interval: "+interval)
     }
-   })
+   });
+   socket.on("erase cell",function(cellid){
+       deleteCell(cellid)
+   });
+  
 });
 
+
+function deleteCell(cellid) {
+    var arrayToWork;
+
+    if (cellid == 1) {
+        arrayToWork = grass_array;
+    } else if (cellid == 2) {
+        arrayToWork = grasseater_array;
+    } else if (cellid == 3) {
+        arrayToWork = predator_array;
+    } else if (cellid == 4) {
+        arrayToWork = dpredator_array;
+    } else if (cellid == 5) {
+        arrayToWork = thunder_array;
+    } else if (cellid == 6) {
+        arrayToWork = fire_array;
+    }
+
+    if (arrayToWork) {
+        // Clear the original array
+        arrayToWork.length = 0;
+        console.log(grass_array.length);
+        for(var y=0;y<matrix.length;y++)
+        {
+            for(var x=0;x<matrix[y].length;x++)
+            {
+                if(matrix[y][x] == cellid) {matrix[y][x] =0;}
+            }
+        }
+    }
+}
 function emit()
 {
     io.sockets.emit("sync", {
@@ -213,7 +248,6 @@ function startGame()
     clearInterval(intervalID)
     simulate()
    
-    console.log(interval)
     setTimeout(func,interval)
    };
    intervalID = setTimeout(func,interval)
@@ -224,3 +258,4 @@ server.listen(PORT, function(){
     console.log("Server is running on port "+PORT);
     console.log("Open: localhost:"+PORT)
  });
+
